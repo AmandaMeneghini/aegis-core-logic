@@ -170,15 +170,25 @@ public class MyLinkedList<T> {
         if (index == size - 1) {
             T data = tail.data;
             tail = tail.prev;
-            tail.next = null;
+            if (tail != null) {
+                tail.next = null;
+            }
             size--;
             return data;
         }
 
         // Caso geral: remover do meio
-        Node current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
+        Node current;
+        if (index < size / 2) {
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
 
         T data = current.data;
