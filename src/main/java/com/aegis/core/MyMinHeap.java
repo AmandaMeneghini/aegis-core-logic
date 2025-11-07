@@ -146,7 +146,27 @@ public class MyMinHeap<T extends Comparable<T>> {
         heap[j] = temp;
     }
 
+    /**
+     * Returns the index of the parent node for the given child index in the heap.
+     *
+     * @param index The index of the child node.
+     * @return The index of the parent node.
+     */
     private int getParentIndex(int index) { return (index - 1) / 2; }
+
+    /**
+     * Returns the index of the left child node for the given parent index in the heap.
+     *
+     * @param index The index of the parent node.
+     * @return The index of the left child node.
+     */
     private int getLeftChildIndex(int index) { return 2 * index + 1; }
+
+    /**
+     * Returns the index of the right child node for the given parent index in the heap.
+     *
+     * @param index The index of the parent node.
+     * @return The index of the right child node.
+     */
     private int getRightChildIndex(int index) { return 2 * index + 2; }
 }
