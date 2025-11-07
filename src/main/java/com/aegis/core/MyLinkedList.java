@@ -161,12 +161,11 @@ public class MyLinkedList<T> {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
 
-        // Caso especial: remover primeiro elemento
         if (index == 0) {
             return removeFirst();
         }
 
-        // Caso especial: remover último elemento
+
         if (index == size - 1) {
             T data = tail.data;
             tail = tail.prev;
@@ -177,7 +176,6 @@ public class MyLinkedList<T> {
             return data;
         }
 
-        // Caso geral: remover do meio
         Node current;
         if (index < size / 2) {
             current = head;
