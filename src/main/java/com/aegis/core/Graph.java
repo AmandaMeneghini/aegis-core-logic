@@ -116,13 +116,13 @@ public class Graph {
     }
 
     /**
-     * Encontra a rota com o menor risco acumulado entre dois locais
-     * usando o Algoritmo de Dijkstra.
+     * Finds the route with the lowest accumulated risk between two locations
+     * using Dijkstra's Algorithm.
      *
-     * @param originId ID do vértice de origem.
-     * @param destId ID do vértice de destino.
-     * @return Uma MyLinkedList com os vértices na ordem da rota mais segura,
-     * ou uma lista vazia se nenhum caminho for encontrado.
+     * @param originId The ID of the origin vertex.
+     * @param destId The ID of the destination vertex.
+     * @return A MyLinkedList containing the vertices in the order of the safest route,
+     * or an empty list if no path is found.
      */
     public MyLinkedList<Vertex> findSafestRoute(String originId, String destId) {
         resetGraphState();

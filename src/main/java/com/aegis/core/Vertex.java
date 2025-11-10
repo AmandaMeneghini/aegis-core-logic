@@ -4,7 +4,9 @@ package com.aegis.core;
  * Represents a single node (or location) in the graph.
  * A Vertex holds its own list of outgoing edges (routes).
  */
-public class Vertex implements Comparable<Vertex>{
+
+public class Vertex implements Comparable<Vertex> {
+
     private final String id;
     private final String name;
     private MyLinkedList<Edge> edges;
