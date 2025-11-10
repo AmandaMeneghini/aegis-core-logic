@@ -87,4 +87,81 @@ public class Graph {
     public MyLinkedList<Vertex> getVertices() {
         return vertices;
     }
+
+    /**
+     * Resets the temporary fields of all vertices.
+     * Essential for running the search algorithm multiple times.
+     */
+    private void resetGraphState() {
+        for (int i = 0; i < vertices.size(); i++) {
+            Vertex v = vertices.get(i);
+            v.tempMinRisk = Integer.MAX_VALUE;
+            v.tempPrevious = null;
+        }
+    }
+
+    /**
+     * Reconstructs the path (in the correct order)
+     * following the 'tempPrevious' pointers of the destination vertex.
+     */
+    private MyLinkedList<Vertex> reconstructPath(Vertex target) {
+        MyLinkedList<Vertex> path = new MyLinkedList<>();
+        Vertex current = target;
+
+        while (current != null) {
+            path.addFirst(current);
+            current = current.tempPrevious;
+        }
+        return path;
+    }
+
+    /**
+     * Encontra a rota com o menor risco acumulado entre dois locais
+     * usando o Algoritmo de Dijkstra.
+     *
+     * @param originId ID do vértice de origem.
+     * @param destId ID do vértice de destino.
+     * @return Uma MyLinkedList com os vértices na ordem da rota mais segura,
+     * ou uma lista vazia se nenhum caminho for encontrado.
+     */
+    public MyLinkedList<Vertex> findSafestRoute(String originId, String destId) {
+        resetGraphState();
+
+        Vertex origin = findVertex(originId);
+        Vertex destination = findVertex(destId);
+
+        if (origin == null || destination == null) {
+            throw new IllegalArgumentException("Origem ou Destino inválido.");
+        }
+
+        MyMinHeap<Vertex> priorityQueue = new MyMinHeap<>();
+
+        origin.tempMinRisk = 0;
+        priorityQueue.insert(origin);
+
+        while (!priorityQueue.isEmpty()) {
+
+            Vertex currentVertex = priorityQueue.extractMin();
+
+            if (currentVertex.equals(destination)) {
+                return reconstructPath(destination);
+            }
+
+            MyLinkedList<Edge> edges = currentVertex.getEdges();
+            for (int i = 0; i < edges.size(); i++) {
+                Edge edge = edges.get(i);
+                Vertex neighbor = edge.getDestination();
+
+                int newRisk = currentVertex.tempMinRisk + edge.getRiskWeight();
+
+                if (newRisk < neighbor.tempMinRisk) {
+                    neighbor.tempMinRisk = newRisk;
+                    neighbor.tempPrevious = currentVertex;
+                    priorityQueue.insert(neighbor);
+                }
+            }
+        }
+
+        return new MyLinkedList<>();
+    }
 }
