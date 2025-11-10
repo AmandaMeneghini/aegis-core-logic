@@ -1,123 +1,85 @@
 package org.example;
 
+import com.aegis.core.Graph;
+import com.aegis.core.GraphLoader;
 import com.aegis.core.MyLinkedList;
+import com.aegis.core.Vertex;
+
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
-        MyLinkedList<Integer> list = new MyLinkedList<>();
+        System.out.println("=== 🛡️  Inicializando Sistema Aegis... ===");
 
-        System.out.println("=== Testando MyLinkedList ===\n");
+        // --- Passo 1: Carregar o Grafo ---
+        GraphLoader loader = new GraphLoader();
+        Graph graph;
 
-        // Teste 1: Adicionar elementos
-        System.out.println("1. Adicionando elementos (1, 2, 3):");
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        printList(list);
-
-        // Teste 2: Adicionar no início
-        System.out.println("\n2. Adicionando 0 no início:");
-        list.addFirst(0);
-        printList(list);
-
-        // Teste 3: Obter elemento por índice
-        System.out.println("\n3. Obtendo elemento no índice 2:");
-        System.out.println("Elemento: " + list.get(2));
-
-        // Teste 4: Remover primeiro elemento
-        System.out.println("\n4. Removendo primeiro elemento:");
-        Integer removed = list.removeFirst();
-        System.out.println("Removido: " + removed);
-        printList(list);
-
-        // Teste 5: Verificar tamanho e isEmpty
-        System.out.println("\n5. Tamanho da lista: " + list.size());
-        System.out.println("Lista vazia? " + list.isEmpty());
-
-        // Teste 6: Testar exceções
-        System.out.println("\n6. Testando exceções:");
-        try {
-            list.get(100);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Exceção capturada: " + e.getMessage());
-        }
-
-        // === TESTES DO MÉTODO REMOVE(INDEX) ===
-        System.out.println("\n=== Testando método remove(int index) ===\n");
-
-        // Preparar lista para testes
-        MyLinkedList<Integer> testList = new MyLinkedList<>();
-        testList.add(10);
-        testList.add(20);
-        testList.add(30);
-        testList.add(40);
-        testList.add(50);
-        System.out.println("Lista inicial:");
-        printList(testList);
-
-        // Teste 8: Remover do início (índice 0)
-        System.out.println("\n8. Removendo elemento no índice 0:");
-        Integer removedFirst = testList.remove(0);
-        System.out.println("Removido: " + removedFirst);
-        printList(testList);
-        System.out.println("Tamanho: " + testList.size());
-
-        // Teste 9: Remover do final (último índice)
-        System.out.println("\n9. Removendo elemento no último índice (" + (testList.size() - 1) + "):");
-        Integer removedLast = testList.remove(testList.size() - 1);
-        System.out.println("Removido: " + removedLast);
-        printList(testList);
-        System.out.println("Tamanho: " + testList.size());
-
-        // Teste 10: Remover do meio (índice 1)
-        System.out.println("\n10. Removendo elemento no índice 1 (meio):");
-        Integer removedMiddle = testList.remove(1);
-        System.out.println("Removido: " + removedMiddle);
-        printList(testList);
-        System.out.println("Tamanho: " + testList.size());
-
-        // Teste 11: Remover até esvaziar a lista
-        System.out.println("\n11. Removendo todos os elementos usando remove(0):");
-        while (!testList.isEmpty()) {
-            Integer elem = testList.remove(0);
-            System.out.println("Removido: " + elem + " | Tamanho: " + testList.size());
-        }
-        System.out.println("Lista vazia? " + testList.isEmpty());
-
-        // Teste 12: Testar exceção de índice inválido
-        System.out.println("\n12. Testando exceção com índice inválido:");
-        MyLinkedList<Integer> emptyList = new MyLinkedList<>();
-        try {
-            emptyList.remove(0);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Exceção capturada (lista vazia): " + e.getMessage());
-        }
-
-        MyLinkedList<Integer> smallList = new MyLinkedList<>();
-        smallList.add(100);
-        try {
-            smallList.remove(5);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Exceção capturada (índice fora do range): " + e.getMessage());
-        }
+        // Caminhos relativos da raiz do projeto
+        String verticesPath = "src/main/resources/vertices.csv";
+        String edgesPath = "src/main/resources/edges.csv";
 
         try {
-            smallList.remove(-1);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Exceção capturada (índice negativo): " + e.getMessage());
+            graph = loader.loadGraph(verticesPath, edgesPath);
+            System.out.println("Mapa de risco carregado com sucesso!");
+            System.out.println("Locais carregados: " + graph.getVertices().size());
+        } catch (FileNotFoundException e) {
+            System.err.println("ERRO CRÍTICO: Não foi possível carregar os arquivos do mapa.");
+            System.err.println(e.getMessage());
+            return; // Encerra o programa se não puder carregar o mapa
         }
 
-        System.out.println("\n=== Testes concluídos! ===");
-    }
+        // --- Passo 2: Loop Interativo (CLI) ---
+        Scanner inputScanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n--- Nova Busca de Rota Segura ---");
+            System.out.print("Digite o ID da Origem (ex: AG-01) ou 'sair': ");
+            String originId = inputScanner.nextLine().trim();
 
-    private static <T> void printList(MyLinkedList<T> list) {
-        System.out.print("Lista: [");
-        for (int i = 0; i < list.size(); i++) {
-            System.out.print(list.get(i));
-            if (i < list.size() - 1) {
-                System.out.print(", ");
+            if (originId.equalsIgnoreCase("sair")) {
+                break; // Encerra o loop
+            }
+
+            System.out.print("Digite o ID do Destino (ex: ATM-02): ");
+            String destId = inputScanner.nextLine().trim();
+
+            // --- Passo 3: Executar Dijkstra e Imprimir ---
+            try {
+                MyLinkedList<Vertex> path = graph.findSafestRoute(originId, destId);
+                printPath(path, originId, destId);
+            } catch (IllegalArgumentException e) {
+                System.err.println("ERRO: ID de origem ou destino não encontrado no mapa.");
             }
         }
-        System.out.println("]");
+
+        inputScanner.close();
+        System.out.println("=== 🛡️  Sistema Aegis Desligado. ===");
+    }
+
+    /**
+     * Método auxiliar para imprimir a rota de forma legível.
+     * @param path A lista de vértices retornada pelo Dijkstra.
+     */
+    private static void printPath(MyLinkedList<Vertex> path, String originId, String destId) {
+        if (path.isEmpty()) {
+            System.out.println("\nResultado: Nenhuma rota segura encontrada entre " + originId + " e " + destId + ".");
+            return;
+        }
+
+        System.out.println("\nResultado: Rota mais segura encontrada!");
+
+        int totalRisk = path.get(path.size() - 1).tempMinRisk; // Risco total está no destino
+        System.out.println("Risco Total Acumulado: " + totalRisk);
+
+        for (int i = 0; i < path.size(); i++) {
+            Vertex v = path.get(i);
+            System.out.print(v.getName() + " (ID: " + v.getId() + ")");
+            if (i < path.size() - 1) {
+                System.out.print(" -> ");
+            }
+        }
+        System.out.println("\n--- Fim da Rota ---");
     }
 }
