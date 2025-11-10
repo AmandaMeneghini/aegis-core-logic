@@ -4,10 +4,13 @@ package com.aegis.core;
  * Represents a single node (or location) in the graph.
  * A Vertex holds its own list of outgoing edges (routes).
  */
-public class Vertex {
+public class Vertex implements Comparable<Vertex>{
     private final String id;
     private final String name;
     private MyLinkedList<Edge> edges;
+
+    public int tempMinRisk = Integer.MAX_VALUE;
+    public Vertex tempPrevious = null;
 
     public Vertex(String id, String name) {
         if (id == null || id.isEmpty()) {
@@ -68,4 +71,13 @@ public class Vertex {
                 id, name, edges.size());
     }
 
+    /**
+     * Compares this Vertex to another, based on the
+     * 'tempMinRisk' (temporary minimum risk).
+     * Essential for MyMinHeap to function.
+     */
+    @Override
+    public int compareTo(Vertex other) {
+        return Integer.compare(this.tempMinRisk, other.tempMinRisk);
+    }
 }
