@@ -7,6 +7,7 @@ package com.aegis.core;
 public class Graph {
 
     private final MyLinkedList<Vertex> vertices;
+    private int dfsTime;
 
     public Graph() {
         this.vertices = new MyLinkedList<>();
@@ -95,8 +96,17 @@ public class Graph {
     private void resetGraphState() {
         for (int i = 0; i < vertices.size(); i++) {
             Vertex v = vertices.get(i);
+
+            // Campos do Dijkstra
             v.tempMinRisk = Integer.MAX_VALUE;
             v.tempPrevious = null;
+
+            // Campos do DFS (Novos)
+            v.isVisited = false;
+            v.dfsNum = -1;
+            v.lowLink = -1;
+            v.parent = null;
+            v.tempIsArticulationPoint = false;
         }
     }
 
@@ -163,5 +173,76 @@ public class Graph {
         }
 
         return new MyLinkedList<>();
+    }
+
+    /**
+     * Finds all Articulation Points (critical locations) in the graph.
+     *
+     * @return A MyLinkedList containing all Vertices
+     * that are critical points.
+     */
+    public MyLinkedList<Vertex> findCriticalPoints() {
+
+        resetGraphState();
+        dfsTime = 0;
+
+        MyLinkedList<Vertex> articulationPoints = new MyLinkedList<>();
+
+        for (int i = 0; i < vertices.size(); i++) {
+            Vertex v = vertices.get(i);
+            if (!v.isVisited) {
+                dfsArticulation(v);
+            }
+        }
+
+        for (int i = 0; i < vertices.size(); i++) {
+            Vertex v = vertices.get(i);
+            if (v.tempIsArticulationPoint) {
+                articulationPoints.add(v);
+            }
+        }
+
+        return articulationPoints;
+    }
+
+    /**
+     * DFS recursive engine for finding Articulation Points.
+     * <p>
+     * This method modifies the 'temp' fields in the Vertices.
+     *
+     * @param u The current vertex being visited.
+     */
+    private void dfsArticulation(Vertex u) {
+        u.isVisited = true;
+        dfsTime++;
+        u.dfsNum = u.lowLink = dfsTime;
+        int childrenCount = 0;
+
+        MyLinkedList<Edge> edges = u.getEdges();
+        for (int i = 0; i < edges.size(); i++) {
+            Vertex v = edges.get(i).getDestination();
+
+            if (v.equals(u.parent)) {
+                continue;
+            }
+
+            if (v.isVisited) {
+                u.lowLink = Math.min(u.lowLink, v.dfsNum);
+            } else {
+                childrenCount++;
+                v.parent = u;
+                dfsArticulation(v);
+
+                u.lowLink = Math.min(u.lowLink, v.lowLink);
+
+                if (u.parent == null && childrenCount > 1) {
+                    u.tempIsArticulationPoint = true;
+                }
+
+                if (u.parent != null && v.lowLink >= u.dfsNum) {
+                    u.tempIsArticulationPoint = true;
+                }
+            }
+        }
     }
 }
