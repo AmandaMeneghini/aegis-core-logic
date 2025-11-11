@@ -13,6 +13,11 @@ public class Vertex implements Comparable<Vertex> {
 
     public int tempMinRisk = Integer.MAX_VALUE;
     public Vertex tempPrevious = null;
+    public boolean isVisited = false;
+    public int dfsNum = -1;
+    public int lowLink = -1;
+    public Vertex parent = null;
+    public boolean tempIsArticulationPoint = false;
 
     public Vertex(String id, String name) {
         if (id == null || id.isEmpty()) {

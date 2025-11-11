@@ -34,33 +34,62 @@ public class Main {
         // --- Passo 2: Loop Interativo (CLI) ---
         Scanner inputScanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\n--- Nova Busca de Rota Segura ---");
-            System.out.print("Digite o ID da Origem (ex: AG-01) ou 'sair': ");
-            String originId = inputScanner.nextLine().trim();
+            System.out.println("\n--- 🛡️  Menu Principal Aegis 🛡️ ---");
+            System.out.println("1. Calcular Rota Mais Segura");
+            System.out.println("2. Identificar Locais Críticos (Pontos de Falha)");
+            System.out.println("Digite 'sair' para encerrar.");
+            System.out.print("Escolha uma opção: ");
 
-            if (originId.equalsIgnoreCase("sair")) {
-                break; // Encerra o loop
-            }
+            String choice = inputScanner.nextLine().trim();
 
-            System.out.print("Digite o ID do Destino (ex: ATM-02): ");
-            String destId = inputScanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    // --- Lógica da Rota Segura (que já tínhamos) ---
+                    System.out.print("Digite o ID da Origem (ex: AG-01): ");
+                    String originId = inputScanner.nextLine().trim();
+                    System.out.print("Digite o ID do Destino (ex: ATM-02): ");
+                    String destId = inputScanner.nextLine().trim();
 
-            // --- Passo 3: Executar Dijkstra e Imprimir ---
-            try {
-                MyLinkedList<Vertex> path = graph.findSafestRoute(originId, destId);
-                printPath(path, originId, destId);
-            } catch (IllegalArgumentException e) {
-                System.err.println("ERRO: ID de origem ou destino não encontrado no mapa.");
+                    try {
+                        MyLinkedList<Vertex> path = graph.findSafestRoute(originId, destId);
+                        printPath(path, originId, destId); // (o método printPath continua o mesmo)
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("ERRO: ID de origem ou destino não encontrado.");
+                    }
+                    break;
+
+                case "2":
+                    // --- Lógica dos Pontos Críticos (NOVO) ---
+                    System.out.println("\nCalculando locais críticos na rede...");
+                    MyLinkedList<Vertex> criticalPoints = graph.findCriticalPoints();
+
+                    if (criticalPoints.isEmpty()) {
+                        System.out.println("Resultado: Nenhum ponto crítico encontrado. A rede é robusta.");
+                    } else {
+                        System.out.println("Resultado: Pontos de falha encontrados!");
+                        System.out.println("Bloquear qualquer um destes locais pode isolar partes da rede:");
+                        for (int i = 0; i < criticalPoints.size(); i++) {
+                            Vertex v = criticalPoints.get(i);
+                            System.out.println("- " + v.getName() + " (ID: " + v.getId() + ")");
+                        }
+                    }
+                    break;
+
+                case "sair":
+                    inputScanner.close();
+                    System.out.println("=== 🛡️  Sistema Aegis Desligado. ===");
+                    return; // Encerra o main()
+
+                default:
+                    System.err.println("Opção inválida. Por favor, digite 1, 2 ou 'sair'.");
             }
         }
-
-        inputScanner.close();
-        System.out.println("=== 🛡️  Sistema Aegis Desligado. ===");
     }
 
     /**
-     * Método auxiliar para imprimir a rota de forma legível.
-     * @param path A lista de vértices retornada pelo Dijkstra.
+     * Auxiliary method for printing the route in a readable format.
+     *
+     * @param path The list of vertices returned by Dijkstra.
      */
     private static void printPath(MyLinkedList<Vertex> path, String originId, String destId) {
         if (path.isEmpty()) {
