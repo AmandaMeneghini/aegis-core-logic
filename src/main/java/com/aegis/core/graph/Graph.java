@@ -1,4 +1,7 @@
-package com.aegis.core;
+package com.aegis.core.graph;
+
+import com.aegis.core.datastructures.MyLinkedList;
+import com.aegis.core.datastructures.MyMinHeap;
 
 /**
  * The main Graph class.

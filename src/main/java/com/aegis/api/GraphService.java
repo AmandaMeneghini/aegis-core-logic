@@ -1,6 +1,6 @@
 package com.aegis.api;
 
-import com.aegis.core.Graph;
+import com.aegis.core.graph.Graph;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Service;

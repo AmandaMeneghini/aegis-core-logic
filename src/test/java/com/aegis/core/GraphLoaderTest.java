@@ -1,5 +1,9 @@
 package com.aegis.core;
 
+import com.aegis.core.graph.Edge;
+import com.aegis.core.graph.Graph;
+import com.aegis.core.graph.GraphLoader;
+import com.aegis.core.graph.Vertex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -60,13 +64,13 @@ class GraphLoaderTest {
 
         assertEquals(1, v1.getEdges().size());
         assertEquals(v2, v1.getEdges().get(0).getDestination());
-        assertEquals(10, v1.getEdges().get(0).getRiskWeight());
+        assertEquals(10, v1.getEdges().get(0).getCost());
 
         assertEquals(2, v2.getEdges().size());
 
         Edge v2_v3 = v2.getEdges().get(1);
         assertEquals(v3, v2_v3.getDestination());
-        assertEquals(20, v2_v3.getRiskWeight());
+        assertEquals(20, v2_v3.getCost());
     }
 
     @Test

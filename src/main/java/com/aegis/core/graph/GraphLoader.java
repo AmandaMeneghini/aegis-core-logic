@@ -1,4 +1,4 @@
-package com.aegis.core;
+package com.aegis.core.graph;
 
 import java.io.File;
 import java.io.FileNotFoundException;

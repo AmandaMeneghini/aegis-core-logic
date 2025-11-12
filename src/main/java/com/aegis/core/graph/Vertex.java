@@ -1,4 +1,6 @@
-package com.aegis.core;
+package com.aegis.core.graph;
+
+import com.aegis.core.datastructures.MyLinkedList;
 
 /**
  * Represents a single node (or location) in the graph.

@@ -1,8 +1,8 @@
 package com.aegis.api;
 
-import com.aegis.core.Graph;
-import com.aegis.core.MyLinkedList;
-import com.aegis.core.Vertex;
+import com.aegis.core.graph.Graph;
+import com.aegis.core.datastructures.MyLinkedList;
+import com.aegis.core.graph.Vertex;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

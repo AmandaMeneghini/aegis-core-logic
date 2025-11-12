@@ -1,4 +1,4 @@
-package com.aegis.core;
+package com.aegis.core.graph;
 
 /**
  * Represents a connection (a route or street) between two vertices.
