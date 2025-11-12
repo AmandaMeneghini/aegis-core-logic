@@ -33,17 +33,17 @@ public class Vertex implements Comparable<Vertex> {
      * Time Complexity: O(1) for adding to the list.
      *
      * @param destination The vertex this edge leads to.
-     * @param riskWeight  The cost/risk of taking this route.
-     * @throws IllegalArgumentException if destination is null or riskWeight is negative.
+     * @param cost  The cost/risk of taking this route.
+     * @throws IllegalArgumentException if destination is null or cost is negative.
      */
-    public void addEdge(Vertex destination, int riskWeight) {
+    public void addEdge(Vertex destination, int cost) {
         if (destination == null) {
             throw new IllegalArgumentException("Destination vertex cannot be null.");
         }
-        if (riskWeight < 0) {
+        if (cost < 0) {
             throw new IllegalArgumentException("Risk weight cannot be negative.");
         }
-        Edge newEdge = new Edge(destination, riskWeight);
+        Edge newEdge = new Edge(destination, cost);
         this.edges.add(newEdge);
     }
 

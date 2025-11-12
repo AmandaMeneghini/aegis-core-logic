@@ -15,8 +15,7 @@ public class Graph {
 
     /**
      * Adds a new vertex (location) to the graph.
-     *
-     * @param id   The unique ID for the vertex.
+     * @param id The unique ID for the vertex.
      * @param name The human-readable name.
      * @throws IllegalArgumentException if a vertex with the same ID already exists.
      */
@@ -51,13 +50,13 @@ public class Graph {
      * Adds a directed edge (a one-way route) between two vertices.
      * Time Complexity: O(n) due to vertex lookup.
      *
-     * @param originId   The ID of the starting vertex.
-     * @param destId     The ID of the destination vertex.
-     * @param riskWeight The risk weight of this route.
-     * @throws IllegalArgumentException if either vertex ID is not found or riskWeight is negative.
+     * @param originId The ID of the starting vertex.
+     * @param destId The ID of the destination vertex.
+     * @param cost The risk weight of this route.
+     * @throws IllegalArgumentException if either vertex ID is not found or cost is negative.
      */
-    public void addDirectedEdge(String originId, String destId, int riskWeight) {
-        if (riskWeight < 0) {
+    public void addDirectedEdge(String originId, String destId, int cost) {
+        if (cost < 0) {
             throw new IllegalArgumentException("Risk weight cannot be negative.");
         }
 
@@ -68,7 +67,7 @@ public class Graph {
             throw new IllegalArgumentException("Invalid Vertex ID. Origin or Destination not found.");
         }
 
-        origin.addEdge(destination, riskWeight);
+        origin.addEdge(destination, cost);
     }
 
     /**
@@ -76,14 +75,14 @@ public class Graph {
      * This creates two directed edges in opposite directions.
      * Time Complexity: O(n) due to vertex lookup.
      *
-     * @param vertex1Id  The ID of the first vertex.
-     * @param vertex2Id  The ID of the second vertex.
-     * @param riskWeight The risk weight, assumed to be the same in both directions.
-     * @throws IllegalArgumentException if either vertex ID is not found or riskWeight is negative.
+     * @param vertex1Id The ID of the first vertex.
+     * @param vertex2Id The ID of the second vertex.
+     * @param cost The risk weight, assumed to be the same in both directions.
+     * @throws IllegalArgumentException if either vertex ID is not found or cost is negative.
      */
-    public void addUndirectedEdge(String vertex1Id, String vertex2Id, int riskWeight) {
-        addDirectedEdge(vertex1Id, vertex2Id, riskWeight);
-        addDirectedEdge(vertex2Id, vertex1Id, riskWeight);
+    public void addUndirectedEdge(String vertex1Id, String vertex2Id, int cost) {
+        addDirectedEdge(vertex1Id, vertex2Id, cost);
+        addDirectedEdge(vertex2Id, vertex1Id, cost);
     }
 
     public MyLinkedList<Vertex> getVertices() {
@@ -92,7 +91,7 @@ public class Graph {
 
     /**
      * Resets the temporary fields of all vertices.
-     * Essential for running search algorithms multiple times.
+     * Essential for running the search algorithm multiple times.
      */
     private void resetGraphState() {
         for (int i = 0; i < vertices.size(); i++) {
@@ -131,7 +130,7 @@ public class Graph {
      * using Dijkstra's Algorithm.
      *
      * @param originId The ID of the origin vertex.
-     * @param destId   The ID of the destination vertex.
+     * @param destId The ID of the destination vertex.
      * @return A MyLinkedList containing the vertices in the order of the safest route,
      * or an empty list if no path is found.
      */
@@ -163,7 +162,7 @@ public class Graph {
                 Edge edge = edges.get(i);
                 Vertex neighbor = edge.getDestination();
 
-                int newRisk = currentVertex.tempMinRisk + edge.getRiskWeight();
+                int newRisk = currentVertex.tempMinRisk + edge.getCost();
 
                 if (newRisk < neighbor.tempMinRisk) {
                     neighbor.tempMinRisk = newRisk;
