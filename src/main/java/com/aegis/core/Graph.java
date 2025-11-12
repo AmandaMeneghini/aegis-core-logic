@@ -51,11 +51,11 @@ public class Graph {
      *
      * @param originId The ID of the starting vertex.
      * @param destId The ID of the destination vertex.
-     * @param riskWeight The risk weight of this route.
-     * @throws IllegalArgumentException if either vertex ID is not found or riskWeight is negative.
+     * @param cost The risk weight of this route.
+     * @throws IllegalArgumentException if either vertex ID is not found or cost is negative.
      */
-    public void addDirectedEdge(String originId, String destId, int riskWeight) {
-        if (riskWeight < 0) {
+    public void addDirectedEdge(String originId, String destId, int cost) {
+        if (cost < 0) {
             throw new IllegalArgumentException("Risk weight cannot be negative.");
         }
 
@@ -66,7 +66,7 @@ public class Graph {
             throw new IllegalArgumentException("Invalid Vertex ID. Origin or Destination not found.");
         }
 
-        origin.addEdge(destination, riskWeight);
+        origin.addEdge(destination, cost);
     }
 
     /**
@@ -76,12 +76,12 @@ public class Graph {
      *
      * @param vertex1Id The ID of the first vertex.
      * @param vertex2Id The ID of the second vertex.
-     * @param riskWeight The risk weight, assumed to be the same in both directions.
-     * @throws IllegalArgumentException if either vertex ID is not found or riskWeight is negative.
+     * @param cost The risk weight, assumed to be the same in both directions.
+     * @throws IllegalArgumentException if either vertex ID is not found or cost is negative.
      */
-    public void addUndirectedEdge(String vertex1Id, String vertex2Id, int riskWeight) {
-        addDirectedEdge(vertex1Id, vertex2Id, riskWeight);
-        addDirectedEdge(vertex2Id, vertex1Id, riskWeight);
+    public void addUndirectedEdge(String vertex1Id, String vertex2Id, int cost) {
+        addDirectedEdge(vertex1Id, vertex2Id, cost);
+        addDirectedEdge(vertex2Id, vertex1Id, cost);
     }
 
     public MyLinkedList<Vertex> getVertices() {
@@ -152,7 +152,7 @@ public class Graph {
                 Edge edge = edges.get(i);
                 Vertex neighbor = edge.getDestination();
 
-                int newRisk = currentVertex.tempMinRisk + edge.getRiskWeight();
+                int newRisk = currentVertex.tempMinRisk + edge.getCost();
 
                 if (newRisk < neighbor.tempMinRisk) {
                     neighbor.tempMinRisk = newRisk;

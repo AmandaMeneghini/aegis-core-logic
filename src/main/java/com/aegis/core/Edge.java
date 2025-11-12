@@ -6,24 +6,23 @@ package com.aegis.core;
  */
 public class Edge {
     private final Vertex destination;
-    private final int riskWeight;
-
-    public Edge(Vertex destination, int riskWeight) {
-        this.destination = destination;
-        this.riskWeight = riskWeight;
-    }
-
+    private final int cost;
     public Vertex getDestination() {
         return destination;
     }
 
-    public int getRiskWeight() {
-        return riskWeight;
+    public Edge(Vertex destination, int cost) {
+        this.destination = destination;
+        this.cost = cost;
+    }
+
+    public int getCost() {
+        return this.cost;
     }
 
     @Override
     public String toString() {
-        return "Edge{to=" + destination.getId() + ", risk=" + riskWeight + '}';
+        return "Edge{to=" + destination.getId() + ", cost=" + cost + '}';
     }
 }
 

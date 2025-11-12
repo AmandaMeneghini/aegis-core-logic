@@ -6,10 +6,11 @@ CREATE TABLE vertices (
 
 -- 2. Cria a tabela das nossas rotas (Arestas)
 CREATE TABLE edges (
-    id INT AUTO_INCREMENT PRIMARY KEY, -- Boa prática ter um ID
+    id INT AUTO_INCREMENT PRIMARY KEY,
     origin_id VARCHAR(10) NOT NULL,
     dest_id VARCHAR(10) NOT NULL,
-    risk INT NOT NULL,
+    risk INT NOT NULL,       -- Risco (ex: 1-100)
+    distance INT NOT NULL, -- Distância (ex: em metros)
     FOREIGN KEY (origin_id) REFERENCES vertices(id),
     FOREIGN KEY (dest_id) REFERENCES vertices(id)
 );
@@ -24,26 +25,26 @@ INSERT INTO vertices (id, name) VALUES
 ('CD-01', 'Centro de Distribuicao');
 
 -- 4. Insere os dados das Arestas (mão dupla)
--- (AG-01 <-> CRZ-01, risk 10)
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('AG-01', 'CRZ-01', 10);
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CRZ-01', 'AG-01', 10);
+-- (AG-01 <-> CRZ-01, risk 10, dist 500m)
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('AG-01', 'CRZ-01', 10, 500);
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CRZ-01', 'AG-01', 10, 500);
 
--- (ATM-01 <-> CRZ-01, risk 5)
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('ATM-01', 'CRZ-01', 5);
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CRZ-01', 'ATM-01', 5);
+-- (ATM-01 <-> CRZ-01, risk 5, dist 200m)
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('ATM-01', 'CRZ-01', 5, 200);
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CRZ-01', 'ATM-01', 5, 200);
 
--- (CRZ-01 <-> CRZ-02, risk 20)
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CRZ-01', 'CRZ-02', 20);
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CRZ-02', 'CRZ-01', 20);
+-- (CRZ-01 <-> CRZ-02, risk 20, dist 1500m)
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CRZ-01', 'CRZ-02', 20, 1500);
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CRZ-02', 'CRZ-01', 20, 1500);
 
--- (CRZ-02 <-> ATM-02, risk 8)
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CRZ-02', 'ATM-02', 8);
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('ATM-02', 'CRZ-02', 8);
+-- (CRZ-02 <-> ATM-02, risk 8, dist 300m)
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CRZ-02', 'ATM-02', 8, 300);
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('ATM-02', 'CRZ-02', 8, 300);
 
--- (CRZ-02 <-> CD-01, risk 15)
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CRZ-02', 'CD-01', 15);
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CD-01', 'CRZ-02', 15);
+-- (CRZ-02 <-> CD-01, risk 15, dist 800m)
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CRZ-02', 'CD-01', 15, 800);
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CD-01', 'CRZ-02', 15, 800);
 
--- (AG-01 <-> CD-01, risk 40)
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('AG-01', 'CD-01', 40);
-INSERT INTO edges (origin_id, dest_id, risk) VALUES ('CD-01', 'AG-01', 40);
+-- (AG-01 <-> CD-01, risk 40, dist 2500m)
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('AG-01', 'CD-01', 40, 2500);
+INSERT INTO edges (origin_id, dest_id, risk, distance) VALUES ('CD-01', 'AG-01', 40, 2500);
