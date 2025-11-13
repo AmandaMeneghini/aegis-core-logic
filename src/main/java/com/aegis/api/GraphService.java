@@ -10,8 +10,12 @@ import jakarta.annotation.PostConstruct;
 import java.sql.ResultSet; // Importa ResultSet
 import java.sql.SQLException; // Importa SQLException
 
+/**
+ * Concrete implementation of IGraphService.
+ * Loads graph data from H2 database on startup.
+ */
 @Service
-public class GraphService {
+public class GraphService implements IGraphService {
 
     private final JdbcTemplate jdbcTemplate;
     private Graph graph;
@@ -60,6 +64,10 @@ public class GraphService {
         System.out.println("Grafo carregado com " + graph.getVertices().size() + " locais.");
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Graph getGraph() {
         return this.graph;
     }
