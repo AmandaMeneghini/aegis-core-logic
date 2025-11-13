@@ -36,11 +36,15 @@ public class Vertex implements Comparable<Vertex> {
      *
      * @param destination The vertex this edge leads to.
      * @param cost  The cost/risk of taking this route.
-     * @throws IllegalArgumentException if destination is null or cost is negative.
+     * @throws IllegalArgumentException if destination is null, destination is this (self-loop), or cost is negative.
      */
     public void addEdge(Vertex destination, int cost) {
         if (destination == null) {
             throw new IllegalArgumentException("Destination vertex cannot be null.");
+        }
+        // Prevent self-loops explicitly (aligns with tests expectations)
+        if (this.equals(destination)) {
+            throw new IllegalArgumentException("Self-loops are not allowed.");
         }
         if (cost < 0) {
             throw new IllegalArgumentException("Risk weight cannot be negative.");

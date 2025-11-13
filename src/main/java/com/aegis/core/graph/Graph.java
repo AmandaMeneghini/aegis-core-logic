@@ -69,6 +69,10 @@ public class Graph {
         if (origin == null || destination == null) {
             throw new IllegalArgumentException("Invalid Vertex ID. Origin or Destination not found.");
         }
+        // Explicitly block self-loops to align with tests
+        if (origin.equals(destination)) {
+            throw new IllegalArgumentException("Self-loops are not allowed.");
+        }
 
         origin.addEdge(destination, cost);
     }
