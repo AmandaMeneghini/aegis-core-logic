@@ -14,13 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * REST Controller for AEGIS API endpoints.
+ * Uses dependency injection with IGraphService interface (Dependency Inversion Principle).
+ */
 @RestController
 @RequestMapping("/api/aegis")
 public class AegisController {
 
-    private final GraphService graphService;
+    private final IGraphService graphService;
 
-    public AegisController(GraphService graphService) {
+    /**
+     * Constructor injection using the interface abstraction.
+     * Spring will automatically inject the concrete implementation (GraphService).
+     *
+     * @param graphService The graph service implementation
+     */
+    public AegisController(IGraphService graphService) {
         this.graphService = graphService;
     }
 
