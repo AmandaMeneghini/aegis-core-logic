@@ -1,5 +1,7 @@
 package com.aegis.core;
 
+import com.aegis.core.graph.Graph;
+import com.aegis.core.graph.Vertex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,7 +54,7 @@ class GraphTest {
 
         assertEquals(1, vA.getEdges().size());
         assertEquals(vB, vA.getEdges().get(0).getDestination());
-        assertEquals(25, vA.getEdges().get(0).getRiskWeight());
+        assertEquals(25, vA.getEdges().get(0).getCost());
 
         assertEquals(0, vB.getEdges().size());
     }
@@ -79,10 +81,10 @@ class GraphTest {
 
         assertEquals(1, vA.getEdges().size());
         assertEquals(vB, vA.getEdges().get(0).getDestination());
-        assertEquals(15, vA.getEdges().get(0).getRiskWeight());
+        assertEquals(15, vA.getEdges().get(0).getCost());
 
         assertEquals(1, vB.getEdges().size());
         assertEquals(vA, vB.getEdges().get(0).getDestination());
-        assertEquals(15, vB.getEdges().get(0).getRiskWeight());
+        assertEquals(15, vB.getEdges().get(0).getCost());
     }
 }

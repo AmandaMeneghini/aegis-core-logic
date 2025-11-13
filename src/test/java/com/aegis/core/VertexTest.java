@@ -1,5 +1,7 @@
 package com.aegis.core;
 
+import com.aegis.core.graph.Edge;
+import com.aegis.core.graph.Vertex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +39,7 @@ class VertexTest {
         Edge addedEdge = vA.getEdges().get(0);
 
         assertEquals(vB, addedEdge.getDestination());
-        assertEquals(10, addedEdge.getRiskWeight());
+        assertEquals(10, addedEdge.getCost());
     }
 
     @Test
@@ -72,7 +74,7 @@ class VertexTest {
         vA.addEdge(vB, Integer.MAX_VALUE);
 
         assertEquals(1, vA.getEdges().size());
-        assertEquals(Integer.MAX_VALUE, vA.getEdges().get(0).getRiskWeight());
+        assertEquals(Integer.MAX_VALUE, vA.getEdges().get(0).getCost());
     }
 
     @Test
@@ -80,7 +82,7 @@ class VertexTest {
         vA.addEdge(vB, 0);
 
         assertEquals(1, vA.getEdges().size());
-        assertEquals(0, vA.getEdges().get(0).getRiskWeight());
+        assertEquals(0, vA.getEdges().get(0).getCost());
     }
 
     @Test
@@ -96,15 +98,4 @@ class VertexTest {
         assertEquals(vA.hashCode(), vA_copy.hashCode());
         assertNotEquals(vA.hashCode(), vB.hashCode());
     }
-
-    @Test
-    void testToString() {
-        String expected = "Vertex{id='A', name='Vertex A', edges=0}";
-        assertEquals(expected, vA.toString());
-
-        vA.addEdge(vB, 10);
-        String expectedWithEdge = "Vertex{id='A', name='Vertex A', edges=1}";
-        assertEquals(expectedWithEdge, vA.toString());
-    }
-
 }

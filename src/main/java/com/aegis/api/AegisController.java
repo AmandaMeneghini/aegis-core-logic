@@ -1,84 +1,80 @@
 package com.aegis.api;
 
-import com.aegis.core.Graph;
-import com.aegis.core.MyLinkedList;
-import com.aegis.core.Vertex;
-
+import com.aegis.api.dto.CriticalPointDTO;
+import com.aegis.api.dto.RouteResponseDTO;
+import com.aegis.core.graph.Graph;
+import com.aegis.core.datastructures.MyLinkedList;
+import com.aegis.core.graph.Vertex;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Map; // Para respostas JSON simples
 
+/**
+ * REST Controller for AEGIS API endpoints.
+ * Uses dependency injection with IGraphService interface (Dependency Inversion Principle).
+ */
 @RestController
 @RequestMapping("/api/aegis")
 public class AegisController {
 
-    private final GraphService graphService;
+    private final IGraphService graphService;
 
-    public AegisController(GraphService graphService) {
+    /**
+     * Constructor injection using the interface abstraction.
+     * Spring will automatically inject the concrete implementation (GraphService).
+     *
+     * @param graphService The graph service implementation
+     */
+    public AegisController(IGraphService graphService) {
         this.graphService = graphService;
     }
 
-    /**
-     * Endpoint para a Rota Mais Segura (Dijkstra).
-     * Mapeado para: GET /api/aegis/route?origin=ID1&destination=ID2
-     */
     @GetMapping("/route")
-    public ResponseEntity<?> getSafestRoute(
+    public ResponseEntity<RouteResponseDTO> getSafestRoute(
             @RequestParam String origin,
             @RequestParam String destination) {
 
-        try {
-            Graph graph = graphService.getGraph();
-            MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
+        Graph graph = graphService.getGraph();
+        MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
 
-            if (path.isEmpty()) {
-                return ResponseEntity.ok(Map.of("message", "Nenhuma rota encontrada."));
-            }
-
-            int totalCost = path.get(path.size() - 1).tempMinRisk;
-
-            String[] routeSteps = new String[path.size()];
-            for (int i = 0; i < path.size(); i++) {
-                Vertex v = path.get(i);
-                routeSteps[i] = v.getName() + " (ID: " + v.getId() + ")";
-            }
-
-            return ResponseEntity.ok(Map.of(
-                    "totalCalculatedCost", totalCost,
-                    "route", routeSteps
-            ));
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        if (path.isEmpty()) {
+            return ResponseEntity.ok(new RouteResponseDTO(0, List.of()));
         }
+
+        int totalCost = path.get(path.size() - 1).tempMinRisk;
+        List<RouteResponseDTO.RouteStepDTO> routeSteps = new ArrayList<>();
+
+        for (int i = 0; i < path.size(); i++) {
+            Vertex v = path.get(i);
+            routeSteps.add(new RouteResponseDTO.RouteStepDTO(v.getName(), v.getId()));
+        }
+
+        RouteResponseDTO response = new RouteResponseDTO(totalCost, routeSteps);
+        return ResponseEntity.ok(response);
     }
 
     /**
-     * Endpoint para os Pontos Críticos (DFS / Articulação).
-     * Mapeado para: GET /api/aegis/critical-points
+     * Endpoint for Critical Points (DFS / Articulation).
+     * Mapped to: GET /api/aegis/critical-points
      */
     @GetMapping("/critical-points")
-    public ResponseEntity<?> getCriticalPoints() {
+    public ResponseEntity<CriticalPointDTO> getCriticalPoints() {
         Graph graph = graphService.getGraph();
-
-        // --- CÓDIGO ATIVADO ---
-        // Agora podemos chamar a função real, pois sabemos que ela existe
-        // no seu Graph.java!
         MyLinkedList<Vertex> points = graph.findCriticalPoints();
-        // ---------------------
+        List<CriticalPointDTO.PointDTO> criticalPoints = new ArrayList<>();
 
-        String[] criticalPoints = new String[points.size()];
         for (int i = 0; i < points.size(); i++) {
-            criticalPoints[i] = points.get(i).getName() + " (ID: " + points.get(i).getId() + ")";
+            Vertex v = points.get(i);
+            criticalPoints.add(new CriticalPointDTO.PointDTO(v.getName(), v.getId()));
         }
 
-        return ResponseEntity.ok(Map.of(
-                "criticalPointsFound", points.size(),
-                "points", criticalPoints
-        ));
+        CriticalPointDTO response = new CriticalPointDTO(criticalPoints.size(), criticalPoints);
+
+        return ResponseEntity.ok(response);
     }
 }
