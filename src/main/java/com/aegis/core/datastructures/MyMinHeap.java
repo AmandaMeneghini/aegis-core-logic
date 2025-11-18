@@ -13,15 +13,13 @@ import java.util.NoSuchElementException;
 public class MyMinHeap<T extends Comparable<T>> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] heap; // Usamos Object[] para o array genérico
+    private Object[] heap;
     private int size;
 
     public MyMinHeap() {
         this.heap = new Object[DEFAULT_CAPACITY];
         this.size = 0;
     }
-
-    // --- Métodos Principais (Public API) ---
 
     /**
      * Adds a new element to the heap.
@@ -34,9 +32,9 @@ public class MyMinHeap<T extends Comparable<T>> {
             throw new IllegalArgumentException("Cannot insert null element.");
         }
         ensureCapacity();
-        heap[size] = element; // Adiciona no final
+        heap[size] = element;
         size++;
-        heapifyUp(size - 1); // Sobe o elemento para sua posição correta
+        heapifyUp(size - 1);
     }
 
     /**
@@ -52,14 +50,14 @@ public class MyMinHeap<T extends Comparable<T>> {
             throw new NoSuchElementException("Heap is empty.");
         }
 
-        T minElement = (T) heap[0]; // O menor está sempre na raiz
+        T minElement = (T) heap[0];
 
-        // Move o último elemento para a raiz
+
         heap[0] = heap[size - 1];
-        heap[size - 1] = null; // Limpa a última posição
+        heap[size - 1] = null;
         size--;
 
-        heapifyDown(0); // Desce o elemento da raiz para sua posição correta
+        heapifyDown(0);
         return minElement;
     }
 
@@ -110,7 +108,6 @@ public class MyMinHeap<T extends Comparable<T>> {
             int rightChildIndex = getRightChildIndex(index);
             int smallestChildIndex = leftChildIndex;
 
-            // Verifica se o filho da direita existe e é menor
             if (rightChildIndex < size) {
                 T leftChild = (T) heap[leftChildIndex];
                 T rightChild = (T) heap[rightChildIndex];
@@ -131,8 +128,6 @@ public class MyMinHeap<T extends Comparable<T>> {
             }
         }
     }
-
-    // --- Métodos Utilitários (Helpers) ---
 
     private void ensureCapacity() {
         if (size == heap.length) {

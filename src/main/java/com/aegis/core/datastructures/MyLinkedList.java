@@ -25,8 +25,6 @@ public class MyLinkedList<T> {
         this.size = 0;
     }
 
-    // --- Public API ---
-
     /**
      * Adds an element to the end of the list.
      * O(1) time complexity.
