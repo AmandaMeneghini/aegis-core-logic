@@ -176,7 +176,7 @@ class VertexTest {
     }
 
     @Test
-    void testAddEdge_SelfLoopThrowsException() {
+    void testAddEdgeSelfLoopThrowsException() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> vA.addEdge(vA, 10)
@@ -184,4 +184,17 @@ class VertexTest {
 
         assertEquals("Self-loops are not allowed.", exception.getMessage());
     }
+
+    @Test
+    void testEqualsNull() {
+        assertNotEquals(vA, null);
+    }
+
+    @Test
+    void testEqualsDifferentClass() {
+        assertNotEquals(vA, "Not a Vertex");
+        assertNotEquals(vA, Integer.valueOf(42));
+        assertNotEquals(vA, new Object());
+    }
+
 }
