@@ -49,7 +49,7 @@ class MyLinkedListTest {
     }
 
     @Test
-    void testGet_FirstHalfTraversal() {
+    void testGetFirstHalfTraversal() {
         for (int i = 0; i < 8; i++) {
             list.add(i);
         }
@@ -60,7 +60,7 @@ class MyLinkedListTest {
     }
 
     @Test
-    void testRemove_FirstHalfTraversal() {
+    void testRemoveFirstHalfTraversal() {
         for (int i = 0; i < 6; i++) {
             list.add(i);
         }
