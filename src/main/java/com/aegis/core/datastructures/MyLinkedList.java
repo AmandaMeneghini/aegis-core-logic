@@ -169,9 +169,7 @@ public class MyLinkedList<T> {
         if (index == size - 1) {
             T data = tail.data;
             tail = tail.prev;
-            if (tail != null) {
-                tail.next = null;
-            }
+            tail.next = null;
             size--;
             return data;
         }
