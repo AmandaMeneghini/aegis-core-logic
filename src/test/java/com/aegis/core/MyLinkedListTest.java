@@ -192,4 +192,36 @@ class MyLinkedListTest {
 
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(1));
     }
+
+    @Test
+    void testGetThrowsExceptionOnNegativeIndex() {
+        list.add(1);
+        list.add(2);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(-1));
+    }
+
+    @Test
+    void testRemoveLastElementFromSingleElementList() {
+        list.add(42);
+
+        Integer removed = list.remove(0);
+
+        assertEquals(42, removed);
+        assertEquals(0, list.size());
+        assertTrue(list.isEmpty());
+    }
+
+    @Test
+    void testRemoveLastElementFromTwoElementList() {
+        list.add(1);
+        list.add(2);
+
+        Integer removed = list.remove(1);
+
+        assertEquals(2, removed);
+        assertEquals(1, list.size());
+        assertEquals(1, list.get(0));
+    }
+
 }
