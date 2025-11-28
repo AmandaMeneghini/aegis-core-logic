@@ -5,6 +5,13 @@ import com.aegis.api.dto.RouteResponseDTO;
 import com.aegis.core.graph.Graph;
 import com.aegis.core.datastructures.MyLinkedList;
 import com.aegis.core.graph.Vertex;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/aegis")
+@Tag(name = "Aegis API", description = "Endpoints for secure routing and graph analysis")
 public class AegisController {
 
     private final IGraphService graphService;
@@ -34,10 +42,18 @@ public class AegisController {
         this.graphService = graphService;
     }
 
+    @Operation(summary = "Find the safest route", description = "Calculates the route with the minimum accumulated risk between an origin and a destination.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Route found successfully or no path exists",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RouteResponseDTO.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid input parameters", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping("/route")
     public ResponseEntity<RouteResponseDTO> getSafestRoute(
-            @RequestParam String origin,
-            @RequestParam String destination) {
+            @Parameter(description = "ID of the origin vertex", required = true, example = "AG-01") @RequestParam String origin,
+            @Parameter(description = "ID of the destination vertex", required = true, example = "ATM-01") @RequestParam String destination) {
 
         Graph graph = graphService.getGraph();
         MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
@@ -62,6 +78,13 @@ public class AegisController {
      * Endpoint for Critical Points (DFS / Articulation).
      * Mapped to: GET /api/aegis/critical-points
      */
+    @Operation(summary = "Find all critical points", description = "Identifies all articulation points (critical points) in the graph. These are vertices whose removal would increase the number of connected components.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Critical points found successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CriticalPointDTO.class)) }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
     @GetMapping("/critical-points")
     public ResponseEntity<CriticalPointDTO> getCriticalPoints() {
         Graph graph = graphService.getGraph();
