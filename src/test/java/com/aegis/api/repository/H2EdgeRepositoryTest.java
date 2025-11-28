@@ -28,37 +28,27 @@ class H2EdgeRepositoryTest {
     @InjectMocks
     private H2EdgeRepository h2EdgeRepository;
 
-    // Verifica se o método findAll retorna uma lista de arestas quando o banco de dados contém dados.
-    // Este é o cenário de caso de uso principal para garantir que a recuperação de dados funcione como esperado.
     @Test
     void findAll_shouldReturnListOfEdges_whenDataExists() {
-        // Arrange
         EdgeEntity edge1 = new EdgeEntity("A", "B", 5, 100);
         EdgeEntity edge2 = new EdgeEntity("B", "C", 3, 150);
         List<EdgeEntity> expectedEdges = List.of(edge1, edge2);
 
         when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(expectedEdges);
 
-        // Act
         List<EdgeEntity> actualEdges = h2EdgeRepository.findAll();
 
-        // Assert
         assertNotNull(actualEdges, "A lista de arestas não deve ser nula.");
         assertEquals(expectedEdges.size(), actualEdges.size(), "O tamanho da lista de arestas deve ser o esperado.");
         assertEquals(expectedEdges, actualEdges, "A lista de arestas retornada deve ser igual à lista esperada.");
     }
 
-    // Verifica se o método findAll retorna uma lista vazia quando o banco de dados não contém dados.
-    // Este teste de caso de borda garante que o método se comporte corretamente e não retorne nulo ou lance uma exceção quando a tabela estiver vazia.
     @Test
     void findAll_shouldReturnEmptyList_whenNoDataExists() {
-        // Arrange
         when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(Collections.emptyList());
 
-        // Act
         List<EdgeEntity> actualEdges = h2EdgeRepository.findAll();
 
-        // Assert
         assertNotNull(actualEdges, "A lista de arestas não deve ser nula.");
         assertEquals(0, actualEdges.size(), "A lista de arestas deve estar vazia.");
     }

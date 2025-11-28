@@ -133,12 +133,10 @@ class GraphLoaderTest {
             writer.write("V3,Vertex 3\n");
         }
 
-        // Cria arquivo de arestas vazio
         edgeFile.createNewFile();
 
         Graph graph = loader.loadGraph(vertexFile.getAbsolutePath(), edgeFile.getAbsolutePath());
 
-        // Apenas V1 e V3 devem ser carregados (V2 e InvalidLine são ignoradas)
         assertEquals(2, graph.getVertices().size());
         assertNotNull(graph.findVertex("V1"));
         assertNull(graph.findVertex("V2"));
@@ -158,8 +156,8 @@ class GraphLoaderTest {
 
         try (FileWriter writer = new FileWriter(edgeFile)) {
             writer.write("V1,V2,10\n");
-            writer.write("V2,V3\n"); // Linha com apenas 2 colunas (inválida)
-            writer.write("InvalidEdge\n"); // Linha sem formato correto (inválida)
+            writer.write("V2,V3\n");
+            writer.write("InvalidEdge\n");
         }
 
         Graph graph = loader.loadGraph(vertexFile.getAbsolutePath(), edgeFile.getAbsolutePath());
@@ -170,8 +168,8 @@ class GraphLoaderTest {
 
         // Apenas a aresta V1->V2 deve existir
         assertEquals(1, v1.getEdges().size());
-        assertEquals(1, v2.getEdges().size()); // bidirecional: V2->V1
-        assertEquals(0, v3.getEdges().size()); // V3 não tem arestas
+        assertEquals(1, v2.getEdges().size());
+        assertEquals(0, v3.getEdges().size());
     }
 
     @Test
@@ -185,12 +183,10 @@ class GraphLoaderTest {
         }
 
         try (FileWriter writer = new FileWriter(edgeFile)) {
-            // Arquivo vazio
         }
 
         Graph graph = loader.loadGraph(vertexFile.getAbsolutePath(), edgeFile.getAbsolutePath());
 
-        // Deve carregar normalmente (parts.length >= 2)
         assertEquals(2, graph.getVertices().size());
         assertNotNull(graph.findVertex("V1"));
         assertNotNull(graph.findVertex("V2"));
@@ -213,7 +209,7 @@ class GraphLoaderTest {
         Graph graph = loader.loadGraph(vertexFile.getAbsolutePath(), edgeFile.getAbsolutePath());
 
         Vertex v1 = graph.findVertex("V1");
-        // Deve carregar normalmente (parts.length >= 3)
+
         assertEquals(1, v1.getEdges().size());
         assertEquals(15, v1.getEdges().get(0).getCost());
     }
