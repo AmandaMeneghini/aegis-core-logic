@@ -42,7 +42,7 @@ public class AegisController {
         Graph graph = graphService.getGraph();
         MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
 
-        if (path.isEmpty()) {
+        if (path == null || path.isEmpty()) {
             return ResponseEntity.ok(new RouteResponseDTO(0, List.of()));
         }
 
