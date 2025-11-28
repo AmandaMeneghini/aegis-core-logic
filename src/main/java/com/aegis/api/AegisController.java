@@ -55,6 +55,10 @@ public class AegisController {
             @Parameter(description = "ID of the origin vertex", required = true, example = "AG-01") @RequestParam String origin,
             @Parameter(description = "ID of the destination vertex", required = true, example = "ATM-01") @RequestParam String destination) {
 
+        if (!destination.startsWith("AG-") && !destination.startsWith("ATM-")) {
+            throw new IllegalArgumentException("Invalid destination type. Destination must be an Agency (AG-) or ATM (ATM-).");
+        }
+
         Graph graph = graphService.getGraph();
         MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
 
