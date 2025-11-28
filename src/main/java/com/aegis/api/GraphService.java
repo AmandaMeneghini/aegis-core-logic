@@ -5,7 +5,9 @@ import com.aegis.api.entity.VertexEntity;
 import com.aegis.api.repository.IEdgeRepository;
 import com.aegis.api.repository.IVertexRepository;
 import com.aegis.api.strategy.ICostCalculator;
+import com.aegis.core.datastructures.MyLinkedList;
 import com.aegis.core.graph.Graph;
+import com.aegis.core.graph.Vertex;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,5 +79,19 @@ public class GraphService implements IGraphService {
     public Graph getGraph() {
         logger.info("Retornando instância do grafo.");
         return this.graph;
+    }
+
+    @Override
+    @Cacheable(value = "routes", key = "#originId + '-' + #destinationId")
+    public MyLinkedList<Vertex> findSafestRoute(String originId, String destinationId) {
+        logger.info(">>> Calculating safest route from {} to {}...", originId, destinationId);
+        return graph.findSafestRoute(originId, destinationId);
+    }
+
+    @Override
+    @Cacheable("criticalPoints")
+    public MyLinkedList<Vertex> findCriticalPoints() {
+        logger.info(">>> Calculating critical points...");
+        return graph.findCriticalPoints();
     }
 }

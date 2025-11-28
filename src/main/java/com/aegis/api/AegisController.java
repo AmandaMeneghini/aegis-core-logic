@@ -59,8 +59,7 @@ public class AegisController {
             throw new IllegalArgumentException("Invalid destination type. Destination must be an Agency (AG-) or ATM (ATM-).");
         }
 
-        Graph graph = graphService.getGraph();
-        MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
+        MyLinkedList<Vertex> path = graphService.findSafestRoute(origin, destination);
 
         if (path == null || path.isEmpty()) {
             return ResponseEntity.ok(new RouteResponseDTO(0, List.of()));
@@ -91,8 +90,7 @@ public class AegisController {
     })
     @GetMapping("/critical-points")
     public ResponseEntity<CriticalPointDTO> getCriticalPoints() {
-        Graph graph = graphService.getGraph();
-        MyLinkedList<Vertex> points = graph.findCriticalPoints();
+        MyLinkedList<Vertex> points = graphService.findCriticalPoints();
         List<CriticalPointDTO.PointDTO> criticalPoints = new ArrayList<>();
 
         for (int i = 0; i < points.size(); i++) {
