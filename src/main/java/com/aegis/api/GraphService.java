@@ -6,11 +6,11 @@ import com.aegis.api.repository.IEdgeRepository;
 import com.aegis.api.repository.IVertexRepository;
 import com.aegis.api.strategy.ICostCalculator;
 import com.aegis.core.graph.Graph;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
-import jakarta.annotation.PostConstruct;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class GraphService implements IGraphService {
     private final IVertexRepository vertexRepository;
     private final IEdgeRepository edgeRepository;
     private final ICostCalculator costCalculator;
-    private Graph graph;
+    private final Graph graph = new Graph();
 
     /**
      * Constructor with dependency injection.
@@ -49,7 +49,6 @@ public class GraphService implements IGraphService {
 
     @PostConstruct
     public void initializeGraph() {
-        this.graph = new Graph();
         logger.info("🛡️ Iniciando carregamento do grafo...");
 
         // Load vertices from repository
@@ -74,7 +73,9 @@ public class GraphService implements IGraphService {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable("graph")
     public Graph getGraph() {
+        logger.info("Retornando instância do grafo.");
         return this.graph;
     }
 }
