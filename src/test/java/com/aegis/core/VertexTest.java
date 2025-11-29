@@ -98,4 +98,103 @@ class VertexTest {
         assertEquals(vA.hashCode(), vA_copy.hashCode());
         assertNotEquals(vA.hashCode(), vB.hashCode());
     }
+
+    @Test
+    void testCompareToLessThan() {
+        vA.tempMinRisk = 10;
+        vB.tempMinRisk = 20;
+
+        assertTrue(vA.compareTo(vB) < 0);
+    }
+
+    @Test
+    void testCompareToGreaterThan() {
+        vA.tempMinRisk = 30;
+        vB.tempMinRisk = 15;
+
+        assertTrue(vA.compareTo(vB) > 0);
+    }
+
+    @Test
+    void testCompareToEqual() {
+        vA.tempMinRisk = 25;
+        vB.tempMinRisk = 25;
+
+        assertEquals(0, vA.compareTo(vB));
+    }
+
+    @Test
+    void testCompareToWithMaxValue() {
+        vA.tempMinRisk = Integer.MAX_VALUE;
+        vB.tempMinRisk = 100;
+
+        assertTrue(vA.compareTo(vB) > 0);
+    }
+
+    @Test
+    void testCompareToWithZeroValues() {
+        vA.tempMinRisk = 0;
+        vB.tempMinRisk = 0;
+
+        assertEquals(0, vA.compareTo(vB));
+    }
+
+    @Test
+    void testCompareToNegativeVsPositive() {
+        vA.tempMinRisk = -5;
+        vB.tempMinRisk = 10;
+
+        assertTrue(vA.compareTo(vB) < 0);
+    }
+
+    @Test
+    void testToStringWithoutEdges() {
+        assertEquals("Vertex{id='A', name='Vertex A', edges=0}", vA.toString());
+    }
+
+    @Test
+    void testToStringWithSingleEdge() {
+        vA.addEdge(vB, 10);
+
+        assertEquals("Vertex{id='A', name='Vertex A', edges=1}", vA.toString());
+    }
+
+    @Test
+    void testToStringWithMultipleEdges() {
+        Vertex vC = new Vertex("C", "Vertex C");
+        vA.addEdge(vB, 10);
+        vA.addEdge(vC, 20);
+
+        assertEquals("Vertex{id='A', name='Vertex A', edges=2}", vA.toString());
+    }
+
+    @Test
+    void testToStringWithSpecialCharactersInName() {
+        Vertex vSpecial = new Vertex("X1", "Vertex's \"Name\" with <chars>");
+
+        assertEquals("Vertex{id='X1', name='Vertex's \"Name\" with <chars>', edges=0}", vSpecial.toString());
+    }
+
+    @Test
+    void testAddEdgeSelfLoopThrowsException() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> vA.addEdge(vA, 10)
+        );
+
+        assertEquals("Self-loops are not allowed.", exception.getMessage());
+    }
+
+    @Test
+    void testEqualsNull() {
+        assertNotEquals(vA, null);
+    }
+
+    @Test
+    void testEqualsDifferentClass() {
+        assertNotEquals(vA, "Not a Vertex");
+        assertNotEquals(vA, Integer.valueOf(42));
+        assertNotEquals(vA, new Object());
+    }
+
 }

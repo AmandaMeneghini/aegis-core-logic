@@ -19,10 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for GraphService demonstrating the benefits of decoupling.
- * All dependencies are mocked, no real database needed!
- */
+
 @ExtendWith(MockitoExtension.class)
 class GraphServiceTest {
 
@@ -44,7 +41,7 @@ class GraphServiceTest {
 
     @Test
     void testInitializeGraphLoadsVerticesAndEdges() {
-        // Arrange - Prepare test data
+
         List<VertexEntity> mockVertices = Arrays.asList(
             new VertexEntity("A", "Location A"),
             new VertexEntity("B", "Location B"),
@@ -56,20 +53,16 @@ class GraphServiceTest {
             new EdgeEntity("B", "C", 3, 2000)
         );
 
-        // Configure mocks
         when(vertexRepository.findAll()).thenReturn(mockVertices);
         when(edgeRepository.findAll()).thenReturn(mockEdges);
         when(costCalculator.calculate(anyInt(), anyInt())).thenReturn(60);
 
-        // Act - Execute the method
         graphService.initializeGraph();
         Graph graph = graphService.getGraph();
 
-        // Assert - Verify results
         assertNotNull(graph, "Graph should not be null after initialization");
         assertEquals(3, graph.getVertices().size(), "Graph should have 3 vertices");
 
-        // Verify interactions
         verify(vertexRepository, times(1)).findAll();
         verify(edgeRepository, times(1)).findAll();
         verify(costCalculator, times(2)).calculate(anyInt(), anyInt());
@@ -77,7 +70,7 @@ class GraphServiceTest {
 
     @Test
     void testCostCalculatorIsCalledWithCorrectParameters() {
-        // Arrange
+
         List<VertexEntity> mockVertices = Arrays.asList(
             new VertexEntity("A", "Location A"),
             new VertexEntity("B", "Location B")
@@ -91,32 +84,25 @@ class GraphServiceTest {
         when(edgeRepository.findAll()).thenReturn(mockEdges);
         when(costCalculator.calculate(7, 3000)).thenReturn(100);
 
-        // Act
         graphService.initializeGraph();
 
-        // Assert - Verify the calculator was called with the correct edge data
         verify(costCalculator).calculate(7, 3000);
     }
 
     @Test
     void testGraphServiceHandlesEmptyData() {
-        // Arrange - Empty data
+
         when(vertexRepository.findAll()).thenReturn(List.of());
         when(edgeRepository.findAll()).thenReturn(List.of());
 
-        // Act
         graphService.initializeGraph();
         Graph graph = graphService.getGraph();
 
-        // Assert
         assertNotNull(graph);
         assertEquals(0, graph.getVertices().size(), "Graph should be empty");
 
-        // Verify repositories were called
         verify(vertexRepository, times(1)).findAll();
         verify(edgeRepository, times(1)).findAll();
-
-        // Verify calculator was never called (no edges)
         verify(costCalculator, never()).calculate(anyInt(), anyInt());
     }
 }
