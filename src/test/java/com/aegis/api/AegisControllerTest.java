@@ -149,4 +149,47 @@ class AegisControllerTest {
                      exception.getMessage());
         verify(graphService, never()).findSafestRoute(anyString(), anyString());
     }
+
+    @Test
+    void getSafestRoute_whenPathIsNull_returnsOkWithEmptyRoute() {
+        when(graphService.findSafestRoute("AG-01", "ATM-01")).thenReturn(null);
+
+        ResponseEntity<RouteResponseDTO> response = controller.getSafestRoute("AG-01", "ATM-01");
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RouteResponseDTO responseBody = response.getBody();
+        assertNotNull(responseBody);
+        assertEquals(0, responseBody.totalCalculatedCost());
+        assertTrue(responseBody.route().isEmpty());
+
+        verify(graphService, times(1)).findSafestRoute("AG-01", "ATM-01");
+    }
+
+    @Test
+    void getSafestRoute_whenDestinationStartsWithAG_shouldAcceptAndProcess() {
+        Vertex v1 = new Vertex("ATM-01", "Caixa Central");
+        Vertex v2 = new Vertex("AG-02", "Agência Secundária");
+        v2.tempMinRisk = 200;
+
+        MyLinkedList<Vertex> path = new MyLinkedList<>();
+        path.add(v1);
+        path.add(v2);
+
+        when(graphService.findSafestRoute("ATM-01", "AG-02")).thenReturn(path);
+
+        ResponseEntity<RouteResponseDTO> response = controller.getSafestRoute("ATM-01", "AG-02");
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        RouteResponseDTO responseBody = response.getBody();
+        assertNotNull(responseBody);
+        assertEquals(200, responseBody.totalCalculatedCost());
+        assertEquals(2, responseBody.route().size());
+        assertEquals("AG-02", responseBody.route().get(1).id());
+
+        verify(graphService, times(1)).findSafestRoute("ATM-01", "AG-02");
+    }
 }
