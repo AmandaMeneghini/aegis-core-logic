@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +46,8 @@ public class AegisController {
     @Operation(summary = "Find the safest route", description = "Calculates the route with the minimum accumulated risk between an origin and a destination.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Route found successfully or no path exists",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RouteResponseDTO.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RouteResponseDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input parameters", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
@@ -59,8 +60,7 @@ public class AegisController {
             throw new IllegalArgumentException("Invalid destination type. Destination must be an Agency (AG-) or ATM (ATM-).");
         }
 
-        Graph graph = graphService.getGraph();
-        MyLinkedList<Vertex> path = graph.findSafestRoute(origin, destination);
+        MyLinkedList<Vertex> path = graphService.findSafestRoute(origin, destination);
 
         if (path == null || path.isEmpty()) {
             return ResponseEntity.ok(new RouteResponseDTO(0, List.of()));
@@ -85,14 +85,13 @@ public class AegisController {
     @Operation(summary = "Find all critical points", description = "Identifies all articulation points (critical points) in the graph. These are vertices whose removal would increase the number of connected components.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Critical points found successfully",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CriticalPointDTO.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CriticalPointDTO.class))}),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping("/critical-points")
     public ResponseEntity<CriticalPointDTO> getCriticalPoints() {
-        Graph graph = graphService.getGraph();
-        MyLinkedList<Vertex> points = graph.findCriticalPoints();
+        MyLinkedList<Vertex> points = graphService.findCriticalPoints();
         List<CriticalPointDTO.PointDTO> criticalPoints = new ArrayList<>();
 
         for (int i = 0; i < points.size(); i++) {

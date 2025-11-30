@@ -1,7 +1,6 @@
 package com.aegis.api;
 
 import com.aegis.api.dto.RouteResponseDTO;
-import com.aegis.core.graph.Graph;
 import com.aegis.core.graph.Vertex;
 import com.aegis.core.datastructures.MyLinkedList;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,8 +23,6 @@ class AegisControllerTest {
     @Mock
     private IGraphService graphService;
 
-    @Mock
-    private Graph graph;
 
     @Mock
     private MyLinkedList<Vertex> pathOrPoints;
@@ -35,21 +32,20 @@ class AegisControllerTest {
 
     @BeforeEach
     void setUp() {
-        when(graphService.getGraph()).thenReturn(graph);
+
     }
 
     @Test
     void getSafestRoute_whenPathEmpty_returnsOkWithEmptyRoute() {
-
-        when(graph.findSafestRoute("A", "B")).thenReturn(pathOrPoints);
+        when(graphService.findSafestRoute("AG-01", "ATM-01")).thenReturn(pathOrPoints);
         when(pathOrPoints.isEmpty()).thenReturn(true);
 
-        ResponseEntity<?> response = controller.getSafestRoute("A", "B");
+        ResponseEntity<?> response = controller.getSafestRoute("AG-01", "ATM-01");
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertNotNull(response.getBody());
-        verify(graph, times(1)).findSafestRoute("A", "B");
+        verify(graphService, times(1)).findSafestRoute("AG-01", "ATM-01");
         verify(pathOrPoints, never()).get(anyInt());
     }
 
@@ -60,7 +56,7 @@ class AegisControllerTest {
         Vertex p1 = mock(Vertex.class);
         Vertex p2 = mock(Vertex.class);
 
-        when(graph.findCriticalPoints()).thenReturn(points);
+        when(graphService.findCriticalPoints()).thenReturn(points);
         when(points.size()).thenReturn(2);
         when(points.get(0)).thenReturn(p1);
         when(points.get(1)).thenReturn(p2);
@@ -76,7 +72,7 @@ class AegisControllerTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertNotNull(response.getBody());
 
-        verify(graph, times(1)).findCriticalPoints();
+        verify(graphService, times(1)).findCriticalPoints();
         verify(points, times(1)).get(0);
         verify(points, times(1)).get(1);
         verify(p1, atLeastOnce()).getName();
@@ -90,7 +86,7 @@ class AegisControllerTest {
         @SuppressWarnings("unchecked")
         MyLinkedList<Vertex> points = mock(MyLinkedList.class);
 
-        when(graph.findCriticalPoints()).thenReturn(points);
+        when(graphService.findCriticalPoints()).thenReturn(points);
         when(points.size()).thenReturn(0);
 
         ResponseEntity<?> response = controller.getCriticalPoints();
@@ -99,23 +95,23 @@ class AegisControllerTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertNotNull(response.getBody());
 
-        verify(graph, times(1)).findCriticalPoints();
+        verify(graphService, times(1)).findCriticalPoints();
         verify(points, never()).get(anyInt());
     }
 
     @Test
     void getSafestRoute_shouldReturnOkAndRoute_whenPathIsFound() {
-        Vertex v1 = new Vertex("A", "Ponto A");
-        Vertex v2 = new Vertex("B", "Ponto B");
+        Vertex v1 = new Vertex("AG-01", "Agência Central");
+        Vertex v2 = new Vertex("ATM-01", "Caixa Shopping");
         v2.tempMinRisk = 150;
 
         MyLinkedList<Vertex> path = new MyLinkedList<>();
         path.add(v1);
         path.add(v2);
 
-        when(graph.findSafestRoute("A", "B")).thenReturn(path);
+        when(graphService.findSafestRoute("AG-01", "ATM-01")).thenReturn(path);
 
-        ResponseEntity<RouteResponseDTO> response = controller.getSafestRoute("A", "B");
+        ResponseEntity<RouteResponseDTO> response = controller.getSafestRoute("AG-01", "ATM-01");
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -124,23 +120,33 @@ class AegisControllerTest {
         assertNotNull(responseBody);
         assertEquals(150, responseBody.totalCalculatedCost());
         assertEquals(2, responseBody.route().size());
-        assertEquals("Ponto A", responseBody.route().get(0).name());
-        assertEquals("B", responseBody.route().get(1).id());
+        assertEquals("Agência Central", responseBody.route().get(0).name());
+        assertEquals("ATM-01", responseBody.route().get(1).id());
 
-        verify(graph, times(1)).findSafestRoute("A", "B");
+        verify(graphService, times(1)).findSafestRoute("AG-01", "ATM-01");
     }
 
     @Test
     void getSafestRoute_shouldThrowException_whenOriginOrDestinationNotFound() {
-
         String errorMessage = "Vértice de origem 'Z' não encontrado.";
-        when(graph.findSafestRoute("Z", "B")).thenThrow(new NoSuchElementException(errorMessage));
+        when(graphService.findSafestRoute("AG-01", "ATM-99")).thenThrow(new NoSuchElementException(errorMessage));
 
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
-            controller.getSafestRoute("Z", "B");
+            controller.getSafestRoute("AG-01", "ATM-99");
         });
 
         assertEquals(errorMessage, exception.getMessage());
-        verify(graph, times(1)).findSafestRoute("Z", "B");
+        verify(graphService, times(1)).findSafestRoute("AG-01", "ATM-99");
+    }
+
+    @Test
+    void getSafestRoute_shouldThrowIllegalArgumentException_whenDestinationIsInvalid() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            controller.getSafestRoute("AG-01", "INVALID-ID");
+        });
+
+        assertEquals("Invalid destination type. Destination must be an Agency (AG-) or ATM (ATM-).",
+                     exception.getMessage());
+        verify(graphService, never()).findSafestRoute(anyString(), anyString());
     }
 }
