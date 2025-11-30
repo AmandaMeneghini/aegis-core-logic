@@ -22,10 +22,10 @@ class MyLinkedListTest {
         list.add(2);
         list.add(3);
 
-        assertEquals(3, list.size()); // Verifica se o tamanho é 3
-        assertEquals(1, list.get(0)); // Verifica se o primeiro elemento é 1
-        assertEquals(2, list.get(1)); // Verifica se o segundo é 2
-        assertEquals(3, list.get(2)); // Verifica se o terceiro é 3
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0));
+        assertEquals(2, list.get(1));
+        assertEquals(3, list.get(2));
     }
 
     @Test
@@ -46,6 +46,34 @@ class MyLinkedListTest {
     @Test
     void testAddFirstNullThrowsException() {
         assertThrows(IllegalArgumentException.class, () -> list.addFirst(null));
+    }
+
+    @Test
+    void testGetFirstHalfTraversal() {
+        for (int i = 0; i < 8; i++) {
+            list.add(i);
+        }
+
+        assertEquals(3, list.get(3));
+        assertEquals(0, list.get(0));
+        assertEquals(7, list.get(7));
+    }
+
+    @Test
+    void testRemoveFirstHalfTraversal() {
+        for (int i = 0; i < 6; i++) {
+            list.add(i);
+        }
+
+        Integer removed = list.remove(2);
+
+        assertEquals(2, removed);
+        assertEquals(5, list.size());
+        assertEquals(0, list.get(0));
+        assertEquals(1, list.get(1));
+        assertEquals(3, list.get(2));
+        assertEquals(4, list.get(3));
+        assertEquals(5, list.get(4));
     }
 
 
@@ -164,4 +192,36 @@ class MyLinkedListTest {
 
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(1));
     }
+
+    @Test
+    void testGetThrowsExceptionOnNegativeIndex() {
+        list.add(1);
+        list.add(2);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(-1));
+    }
+
+    @Test
+    void testRemoveLastElementFromSingleElementList() {
+        list.add(42);
+
+        Integer removed = list.remove(0);
+
+        assertEquals(42, removed);
+        assertEquals(0, list.size());
+        assertTrue(list.isEmpty());
+    }
+
+    @Test
+    void testRemoveLastElementFromTwoElementList() {
+        list.add(1);
+        list.add(2);
+
+        Integer removed = list.remove(1);
+
+        assertEquals(2, removed);
+        assertEquals(1, list.size());
+        assertEquals(1, list.get(0));
+    }
+
 }
