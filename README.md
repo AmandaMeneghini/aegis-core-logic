@@ -531,7 +531,7 @@ Além de validação pre-commit com **Lefthook** 👊 e **Commitlint** ✍️.
 | **Amanda Duarte Meneghini do Carmo** | 12522192773 |
 | **Renato Gonçalves Machado**         | 12524137779 |
 | **Andy Hyong Tae Choi Youn**         | 12522142446 |
-| **Sedra Alhendie**                   | 12525220383 |
+| **Sedra Alhendi**                    | 12525220383 |
 
 ---
 
