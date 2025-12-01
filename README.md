@@ -46,6 +46,71 @@ Encontra o caminho entre dois pontos (origem → destino) que minimiza o risco t
 - Distância entre pontos
 - Peso configurável entre segurança e distância
 
+<details>
+<summary> 🧠 Lógica do Algoritmo de Custo (Peso das Arestas) </summary>
+
+Um dos diferenciais do Aegis é que ele não busca apenas o caminho mais curto, mas sim o **caminho mais seguro**. Para
+isso, implementamos uma lógica de **Custo Ponderado** no `DefaultCostCalculator`.
+
+Como "Risco" (0-100) e "Distância" (metros) são grandezas muito diferentes, criamos uma fórmula para normalizá-las e
+priorizar a segurança.
+
+### A Fórmula Matemática
+
+O custo de cada aresta é calculado da seguinte forma:
+
+$$
+Custo = \frac{(Risco_{Normalizado} \times 7) + (Distância \times 3)}{10}
+$$
+
+Onde:
+
+1. **Risco Normalizado:** Multiplicamos o risco original por **100**. Isso é necessário porque a distância (em metros)
+   geralmente é um número grande (ex: 500, 2000), enquanto o risco é pequeno (ex: 5, 10). Sem isso, a distância "
+   engoliria" o fator risco.
+2. **Peso de Segurança (70%):** O risco contribui com **70%** do valor final.
+3. **Peso de Distância (30%):** A distância contribui com **30%** do valor final.
+
+### 📝 Exemplo Passo a Passo
+
+Vamos calcular o custo real da rota entre **Agencia Central (AG-01)** e **Cruzamento A (CRZ-01)**:
+
+* 🔴 **Risco:** 10
+* 📏 **Distância:** 500 metros
+
+#### Passo 1: Normalização
+
+Colocamos o risco na mesma escala da distância.
+> $10 (Risco) \times 100 = 1000$
+
+#### Passo 2: Aplicação dos Pesos (70/30)
+
+Aplicamos os multiplicadores definidos na estratégia.
+> **Lado do Risco:** $1000 \times 7 = 7000$
+> **Lado da Distância:** $500 \times 3 = 1500$
+
+#### Passo 3: Soma e Média
+
+Somamos os dois fatores e dividimos por 10 para obter o índice final.
+> $(7000 + 1500) / 10$
+> $8500 / 10$
+> **Custo Final = 850**
+
+---
+
+### 🆚 Comparativo de Decisão
+
+Veja como o algoritmo decide entre dois caminhos hipotéticos:
+
+| Rota                          | Dados Originais                    | Cálculo Interno             | Custo Final | Decisão    |
+|:------------------------------|:-----------------------------------|:----------------------------|:------------|:-----------|
+| **Rota A (Curta e Perigosa)** | Risco: **50** <br> Dist: **200m**  | `((5000*7) + (200*3)) / 10` | **3.560**   | ❌ Evitar   |
+| **Rota B (Longa e Segura)**   | Risco: **5** <br> Dist: **2.000m** | `((500*7) + (2000*3)) / 10` | **950**     | ✅ Escolher |
+
+*O algoritmo prefere percorrer 2km (Rota B) a correr um risco alto de apenas 200 metros (Rota A).*
+
+</details>
+
 ### 2. ⚠️ Identificação de Pontos Críticos
 
 Identifica locais estratégicos (pontos de articulação) no grafo que, se bloqueados, podem isolar partes da rede de
@@ -295,7 +360,7 @@ Started AegisApiApplication in X.XXX seconds
 
 ```json
 {
-  "totalCalculatedCost": 465,
+  "totalCalculatedCost": 3830,
   "route": [
     {
       "name": "Agencia Central",
