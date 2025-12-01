@@ -5,7 +5,7 @@
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.6-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-144%20passing-success.svg)](tests)
+[![Tests](https://img.shields.io/badge/Tests-144%20passing-success.svg)](#tests-section)
 
 ---
 
@@ -61,9 +61,13 @@ priorizar a segurança.
 
 O custo de cada aresta é calculado da seguinte forma:
 
-$$
-Custo = \frac{(Risco_{Normalizado} \times 7) + (Distância \times 3)}{10}
-$$
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/risk-calculation/risk-calculation-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/risk-calculation/risk-calculation-light.png">
+  <img alt="Risk Calculation Formula Image" src="docs/assets/risk-calculation/risk-calculation-dark.png" align="center">
+</picture>
+</div>
 
 Onde:
 
@@ -143,7 +147,7 @@ Abaixo, a visualização gerada da rede com os custos calculados (Risco + Distâ
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/base-graph-aegis/base-graph-aegis-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/base-graph-aegis/base-graph-aegis-light.png">
-  <img width="800px" alt="Logo Taskly image" src="docs/assets/base-graph-aegis/base-graph-aegis-dark.png" align="center">
+  <img alt="Graph schema with total risk ready" src="docs/assets/base-graph-aegis/base-graph-aegis-dark.png" align="center">
 </picture>
 </div>
 
@@ -471,7 +475,7 @@ GET http://localhost:8080/api/aegis/critical-points
 
 ---
 
-## 🧪 Cobertura de Testes
+## <a id="tests-section"></a> 🧪 Cobertura de Testes
 
 ### Estatísticas de Testes
 
