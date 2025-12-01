@@ -19,7 +19,7 @@ class DefaultCostCalculatorTest {
         int distance = 1000;
         int cost = costCalculator.calculate(risk, distance);
 
-        assertEquals(60, cost, "O custo deve ser 60 para risco 5 e distância 1000");
+        assertEquals(650, cost, "O custo deve ser 650 para risco 5 e distância 1000");
     }
 
     @Test
@@ -28,7 +28,7 @@ class DefaultCostCalculatorTest {
         int risk = 0;
         int distance = 2500;
         int cost = costCalculator.calculate(risk, distance);
-        assertEquals(25, cost, "O custo deve ser 25 para risco 0 e distância 2500");
+        assertEquals(750, cost, "O custo deve ser 750 para risco 0 e distância 2500");
     }
 
     @Test
@@ -37,7 +37,7 @@ class DefaultCostCalculatorTest {
         int distance = 0;
         int cost = costCalculator.calculate(risk, distance);
 
-        assertEquals(80, cost, "O custo deve ser 80 para risco 8 e distância 0");
+        assertEquals(560, cost, "O custo deve ser 560 para risco 8 e distância 0");
     }
 
     @Test
@@ -55,7 +55,7 @@ class DefaultCostCalculatorTest {
         int distance = 99;
         int cost = costCalculator.calculate(risk, distance);
 
-        assertEquals(30, cost, "O custo deve ser 30 para risco 3 e distância 99, devido à divisão de inteiros");
+        assertEquals(239, cost, "O custo deve ser 239 para risco 3 e distância 99");
     }
 
     @Test
@@ -64,6 +64,6 @@ class DefaultCostCalculatorTest {
         int distance = 100000;
         int cost = costCalculator.calculate(risk, distance);
 
-        assertEquals(1100, cost, "O custo deve ser 1100 para risco 10 e distância 100000");
+        assertEquals(30700, cost, "O custo deve ser 30700 para risco 10 e distância 100000");
     }
 }
