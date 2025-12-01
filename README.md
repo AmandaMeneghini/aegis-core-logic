@@ -49,6 +49,8 @@ Encontra o caminho entre dois pontos (origem → destino) que minimiza o risco t
 <details>
 <summary> 🧠 Lógica do Algoritmo de Custo (Peso das Arestas) </summary>
 
+
+
 Um dos diferenciais do Aegis é que ele não busca apenas o caminho mais curto, mas sim o **caminho mais seguro**. Para
 isso, implementamos uma lógica de **Custo Ponderado** no `DefaultCostCalculator`.
 
@@ -130,6 +132,24 @@ Sistema de cache para otimizar consultas repetidas:
 - Cache de rotas calculadas
 - Cache de pontos críticos
 - Invalidação automática ao recarregar o grafo
+
+---
+
+## 🗺️ Visualização da Topologia
+
+Abaixo, a visualização gerada da rede com os custos calculados (Risco + Distância) em cada aresta:
+
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/base-graph-aegis/base-graph-aegis-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/base-graph-aegis/base-graph-aegis-light.png">
+  <img width="800px" alt="Logo Taskly image" src="docs/assets/base-graph-aegis/base-graph-aegis-dark.png" align="center">
+</picture>
+</div>
+
+<br>
+
+> **Nota:** Repare que as conexões centrais possuem múltiplas rotas, enquanto as extremidades dependem dos cruzamentos para interligação, aumentando a importância da detecção de **Pontos de Articulação**.
 
 ---
 
