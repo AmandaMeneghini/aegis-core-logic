@@ -50,15 +50,14 @@ public class MyMinHeap<T extends Comparable<T>> {
             throw new NoSuchElementException("Heap is empty.");
         }
 
-        T minElement = (T) heap[0];
+        T minElement = (T) heap[0];        // Menor elemento está na raiz
 
-
-        heap[0] = heap[size - 1];
+        heap[0] = heap[size - 1];          // Move último para raiz
         heap[size - 1] = null;
         size--;
 
-        heapifyDown(0);
-        return minElement;
+        heapifyDown(0);                    // Reorganiza para manter propriedade do heap
+        return minElement;                 // O(log n)
     }
 
     /**

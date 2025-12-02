@@ -9,17 +9,18 @@ import com.aegis.core.datastructures.MyLinkedList;
 
 public class Vertex implements Comparable<Vertex> {
 
-    private final String id;
-    private final String name;
-    private MyLinkedList<Edge> edges;
+    private final String id;                                // ID único (ex: "AG-01")
+    private final String name;                              // Nome legível (ex: "Agência Central")
+    private MyLinkedList<Edge> edges;                       // Lista de rotas de saída
 
-    public int tempMinRisk = Integer.MAX_VALUE;
-    public Vertex tempPrevious = null;
-    public boolean isVisited = false;
-    public int dfsNum = -1;
-    public int lowLink = -1;
-    public Vertex parent = null;
-    public boolean tempIsArticulationPoint = false;
+    // Campos temporários para algoritmos
+    public int tempMinRisk = Integer.MAX_VALUE;             // Risco acumulado (Dijkstra)
+    public Vertex tempPrevious = null;                      // Vértice anterior no caminho (Dijkstra)
+    public boolean isVisited = false;                       // Marca visitado (DFS)
+    public int dfsNum = -1;                                 // Ordem de visita (DFS)
+    public int lowLink = -1;                                // Menor dfsNum alcançável (Articulação)
+    public Vertex parent = null;                            // Pai na árvore DFS
+    public boolean tempIsArticulationPoint = false;         // Marca se é ponto crítico
 
     public Vertex(String id, String name) {
         if (id == null || id.isEmpty()) {

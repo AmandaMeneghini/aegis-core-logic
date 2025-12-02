@@ -142,7 +142,8 @@ public class Graph {
      * or an empty list if no path is found.
      */
     public MyLinkedList<Vertex> findSafestRoute(String originId, String destId) {
-        resetGraphState();
+        // PASSO 1: Inicializar todos os vértices
+        resetGraphState(); // Define todos com risco ∞, exceto origem (risco = 0)
 
         Vertex origin = findVertex(originId);
         Vertex destination = findVertex(destId);
@@ -151,19 +152,23 @@ public class Graph {
             throw new IllegalArgumentException("Origem ou Destino inválido.");
         }
 
+        // PASSO 2: Criar fila de prioridade (Min-Heap)
         MyMinHeap<Vertex> priorityQueue = new MyMinHeap<>();
 
-        origin.tempMinRisk = 0;
+        origin.tempMinRisk = 0; // Origem tem risco zero
         priorityQueue.insert(origin);
 
+        // PASSO 3: Processar vértices do menor ao maior risco
         while (!priorityQueue.isEmpty()) {
 
-            Vertex currentVertex = priorityQueue.extractMin();
+            Vertex currentVertex = priorityQueue.extractMin(); // O(log n)
 
+            // Se chegou no destino, para!
             if (currentVertex.equals(destination)) {
-                return reconstructPath(destination);
+                return reconstructPath(destination); // Reconstrói caminho
             }
 
+            // PASSO 4: Atualizar vizinhos (relaxamento)
             MyLinkedList<Edge> edges = currentVertex.getEdges();
             for (int i = 0; i < edges.size(); i++) {
                 Edge edge = edges.get(i);
@@ -171,15 +176,16 @@ public class Graph {
 
                 int newRisk = currentVertex.tempMinRisk + edge.getCost();
 
+                // Se encontrou caminho melhor, atualiza!
                 if (newRisk < neighbor.tempMinRisk) {
-                    neighbor.tempMinRisk = newRisk;
-                    neighbor.tempPrevious = currentVertex;
-                    priorityQueue.insert(neighbor);
+                    neighbor.tempMinRisk = newRisk;       // Atualiza risco
+                    neighbor.tempPrevious = currentVertex; // Marca caminho
+                    priorityQueue.insert(neighbor);        // Adiciona à fila
                 }
             }
         }
 
-        return new MyLinkedList<>();
+        return new MyLinkedList<>(); // Sem caminho
     }
 
     /**
@@ -190,18 +196,20 @@ public class Graph {
      */
     public MyLinkedList<Vertex> findCriticalPoints() {
 
-        resetGraphState();
-        dfsTime = 0;
+        resetGraphState(); // Limpa marcações anteriores
+        dfsTime = 0;       // Contador de tempo de descoberta
 
         MyLinkedList<Vertex> articulationPoints = new MyLinkedList<>();
 
+        // PASSO 1: Executar DFS em todos os componentes
         for (int i = 0; i < vertices.size(); i++) {
             Vertex v = vertices.get(i);
             if (!v.isVisited) {
-                dfsArticulation(v);
+                dfsArticulation(v); // Inicia exploração profunda
             }
         }
 
+        // PASSO 2: Coletar vértices marcados como pontos de articulação
         for (int i = 0; i < vertices.size(); i++) {
             Vertex v = vertices.get(i);
             if (v.tempIsArticulationPoint) {
@@ -220,32 +228,36 @@ public class Graph {
      * @param u The current vertex being visited.
      */
     private void dfsArticulation(Vertex u) {
+        // PASSO 1: Marcar vértice como visitado e atribuir números
         u.isVisited = true;
         dfsTime++;
-        u.dfsNum = u.lowLink = dfsTime;
-        int childrenCount = 0;
+        u.dfsNum = u.lowLink = dfsTime; // Tempo de descoberta
+        int childrenCount = 0;          // Contador de filhos na árvore DFS
 
+        // PASSO 2: Explorar todos os vizinhos
         MyLinkedList<Edge> edges = u.getEdges();
         for (int i = 0; i < edges.size(); i++) {
             Vertex v = edges.get(i).getDestination();
 
-            if (v.equals(u.parent)) {
-                continue;
-            }
+            if (v.equals(u.parent)) continue; // Ignora aresta de retorno ao pai
 
             if (v.isVisited) {
-                u.lowLink = Math.min(u.lowLink, v.dfsNum);
+                // CASO 1: Vizinho já visitado (back edge)
+                u.lowLink = Math.min(u.lowLink, v.dfsNum); // Atualiza lowLink
             } else {
+                // CASO 2: Vizinho não visitado (tree edge)
                 childrenCount++;
-                v.parent = u;
-                dfsArticulation(v);
+                v.parent = u;             // Define pai
+                dfsArticulation(v);       // RECURSÃO: Explora filho
 
-                u.lowLink = Math.min(u.lowLink, v.lowLink);
+                u.lowLink = Math.min(u.lowLink, v.lowLink); // Propaga lowLink
 
+                // REGRA 1: Raiz com múltiplos filhos é ponto crítico
                 if (u.parent == null && childrenCount > 1) {
                     u.tempIsArticulationPoint = true;
                 }
 
+                // REGRA 2: Vértice interno cujo filho não consegue voltar
                 if (u.parent != null && v.lowLink >= u.dfsNum) {
                     u.tempIsArticulationPoint = true;
                 }

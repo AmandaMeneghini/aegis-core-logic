@@ -5,8 +5,8 @@ package com.aegis.core.graph;
  * This edge is directed and weighted by risk.
  */
 public class Edge {
-    private final Vertex destination;
-    private final int cost;
+    private final Vertex destination;   // Para onde a rota vai
+    private final int cost;             // Peso (risco calculado)
     public Vertex getDestination() {
         return destination;
     }

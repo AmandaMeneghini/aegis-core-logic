@@ -3,22 +3,29 @@ package com.aegis.core.datastructures;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<T> {
+    /**
+     * Estrutura interna: cada nó aponta para próximo E anterior
+     * Isso permite navegação bidirecional pela lista
+     */
     private class Node {
-        T data;
-        Node next;
-        Node prev;
+        T data;           // Dado armazenado no nó
+        Node next;        // Ponteiro para o próximo nó (direção: cabeça -> cauda)
+        Node prev;        // Ponteiro para o nó anterior (direção: cauda -> cabeça)
 
         Node(T data) {
             this.data = data;
-            this.next = null;
-            this.prev = null;
+            this.next = null;  // Inicialmente não aponta para ninguém
+            this.prev = null;  // Inicialmente não aponta para ninguém
         }
     }
 
-    private Node head;
-    private Node tail;
-    private int size;
+    private Node head;  // Primeiro elemento da lista
+    private Node tail;  // Último elemento da lista
+    private int size;   // Quantidade de elementos
 
+    /**
+     * Construtor: inicializa lista vazia
+     */
     public MyLinkedList() {
         this.head = null;
         this.tail = null;
